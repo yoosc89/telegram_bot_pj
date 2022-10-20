@@ -1,11 +1,11 @@
 '''
-parser list 등록 후 code_dict - site_code 추가 
+parser list 등록 후  parser_db 와 code_dict - site_code 추가   
 
 '''
 
 import requests
 from bs4 import BeautifulSoup as bs
-import sql
+import sql 
 from datetime import datetime
 import re
 
