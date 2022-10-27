@@ -3,7 +3,7 @@ import command_menu
 from datetime import datetime
 from info import token #텔레그램 봇 token 값 호출 변겯 요망
 
-token = token
+token = token()
 
 
 updater = Updater(token, use_context=True)
