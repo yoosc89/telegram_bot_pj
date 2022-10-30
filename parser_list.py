@@ -8,23 +8,31 @@ from bs4 import BeautifulSoup as bs
 import sql
 from datetime import datetime
 import re
+import concurrent.futures
+import os
+import itertools
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'}
 
 
-def parser_db():
+def parser_db2():
     print(f'parser_start [{datetime.now()}]')
-    convert_def = [
-        clien_jirum,
-        ppomppu,
-        jmana,
-        quasarzone,
-        ruliweb,
-        coolenjoy,
-    ]
+    convert_def = [clien_jirum, ppomppu,
+                   jmana, quasarzone, ruliweb, coolenjoy]
+
+    core = os.cpu_count()
+    pool = concurrent.futures.ProcessPoolExecutor(max_workers=core)
+    procs = []
     for i in convert_def:
-        sql.insert_alert_site(i())
+        procs.append(pool.submit(i))
+    url_list = []
+
+    for i in concurrent.futures.as_completed(procs):
+        url_list.append(i.result())
+
+    url_list = list(itertools.chain(*url_list))
+    sql.insert_alert_site(url_list)
 
 
 def clien_jirum():  # parser
