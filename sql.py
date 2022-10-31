@@ -57,19 +57,28 @@ def select_alert_site(index):
     return cursor.fetchall()  # return type tuple
 
 
+def last_index_alert_site():
+    cursor.execute("select id from alert_site ORDER BY id DESC limit 1;")
+    return cursor.fetchall()
+
+
 def max_alert_site():
     cursor.execute("select max(id) from alert_site where id")
 
 
 def insert_alert_site(data):
+    index = [i for i in last_index_alert_site()[0]]
+    print(index)
     for i in data:
         try:
+            index[0] += 1
             cursor.executemany(
-                "insert into telegram_bot.alert_site (site_name, site_title, site_url, site_domain) values (%s,%s,%s,%s);", [i])
+                "insert into telegram_bot.alert_site (id, site_name, site_title, site_url, site_domain) values (%s,%s,%s,%s,%s);", [index+i])
         except IntegrityError:
+            index[0] -= 1
             pass
-    cursor.execute("SET @CNT = 0;")
-    cursor.execute("UPDATE alert_site SET alert_site.id = @CNT:=@CNT+1;")
+    # cursor.execute("SET @CNT = 0;")
+    # cursor.execute("UPDATE alert_site SET alert_site.id = @CNT:=@CNT+1;")
     conn.commit()
 
 
