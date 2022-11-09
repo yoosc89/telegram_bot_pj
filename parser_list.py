@@ -19,7 +19,7 @@ headers = {
 def parser_db2():
     print(f'parser_start [{datetime.now()}]')
     convert_def = [clien_jirum, ppomppu,
-                   jmana, quasarzone, ruliweb, coolenjoy]
+                   quasarzone, ruliweb, coolenjoy]
 
     core = os.cpu_count()
     pool = concurrent.futures.ProcessPoolExecutor(max_workers=core)
@@ -70,27 +70,6 @@ def ppomppu():  # parser
             list_title.append([domain_name, i.text, i.attrs['href'], url])
         else:
             pass
-
-    return list_title
-
-
-def jmana():
-    domain_name = 'jmana'
-    crawl_pages = 2
-    list_title = []
-    for page in range(1, crawl_pages):
-        url = 'https://kr3.jmana.one'
-        try:
-            get_html = requests.get(
-                url+'/comic_recent?page={}'.format(page), headers=headers)
-            parser = bs(get_html.text, 'html.parser')
-
-            elements = parser.select('a.tit.my_visited')
-
-            for i in elements:
-                list_title.append([domain_name, i.text, i.attrs['href'], url])
-        except requests.exceptions.ConnectionError:
-            return list_title
 
     return list_title
 
